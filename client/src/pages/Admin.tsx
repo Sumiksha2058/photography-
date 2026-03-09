@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
+import axios from "axios";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,9 +12,20 @@ import PhotoManagement from "@/components/admin/PhotoManagement";
 import CategoryManagement from "@/components/admin/CategoryManagement";
 
 export default function Admin() {
-  const { user, isAuthenticated, loading } = useAuth({
-    redirectOnUnauthenticated: true,
-  });
+  const { user, isAuthenticated, loading, refetchAuth } = useAuth();
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoginError(null);
+    try {
+      await axios.post("/api/admin/login", { password });
+      refetchAuth(); // Re-fetch auth status after successful login
+    } catch (error) {
+      setLoginError("Invalid password");
+    }
+  };
   const [, navigate] = useLocation();
 
   if (loading) {
@@ -23,8 +37,26 @@ export default function Admin() {
   }
 
   if (!isAuthenticated || user?.role !== "admin") {
-    navigate("/");
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-center text-gray-900">Admin Login</h2>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <Input
+                type="password"
+                placeholder="Admin Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
+            <Button type="submit" className="w-full">Login</Button>
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (
