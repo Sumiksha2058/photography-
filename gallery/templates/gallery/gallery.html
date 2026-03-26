@@ -1,0 +1,70 @@
+{% extends 'gallery/base.html' %}
+
+{% block title %}Gallery - Photography Portfolio{% endblock %}
+
+{% block content %}
+<h2 style="color: #2c3e50; margin-bottom: 2rem;">Soul Lens Gallery</h2>
+
+<div style="background: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h4 style="margin-bottom: 1rem;">Filter by Category</h4>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="{% url 'gallery:gallery' %}" class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">All Categories</a>
+        {% for category in categories %}
+            <a href="?category={{ category.id }}" class="btn {% if selected_category == category.id %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if photos %}
+    <div class="gallery-grid">
+        {% for photo in photos %}
+            <div class="photo-card">
+                <img src="{{ photo.image_url }}" alt="{{ photo.title }}" style="width: 100%; height: 250px; object-fit: cover;">
+                <div class="photo-card-content">
+                    <h3>{{ photo.title }}</h3>
+                    {% if photo.category %}
+                        <span class="category-badge">{{ photo.category.name }}</span>
+                    {% endif %}
+                    <p>{{ photo.description|truncatewords:15 }}</p>
+                    <small style="color: #999;">👁️ {{ photo.views }} views</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav style="margin-top: 3rem; text-align: center;">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div style="text-align: center; padding: 3rem;">
+        <p style="font-size: 1.2rem; color: #999;">No photos found in this category.</p>
+    </div>
+{% endif %}
+{% endblock %}

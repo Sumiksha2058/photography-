@@ -1,0 +1,34 @@
+{% extends 'gallery/base.html' %}
+
+{% block title %}Home - Photography Portfolio{% endblock %}
+
+{% block content %}
+<div class="hero-section" style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color: white; padding: 4rem 2rem; border-radius: 8px; margin-bottom: 3rem; text-align: center;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Soul Lens Photography</h2>
+    <p style="font-size: 1.2rem; margin-bottom: 2rem;">Capturing the essence of every moment through the lens</p>
+    <a href="{% url 'gallery:gallery' %}" class="btn btn-light" style="padding: 0.75rem 2rem; font-size: 1.1rem;">Explore Gallery</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="color: #e74c3c; margin-bottom: 1rem;">❤️ Soul-Driven Photography</h3>
+        <p>At Soul Lens, we believe photography is about capturing the soul of the moment. Every shot is infused with emotion, artistry, and a deep connection to our subjects.</p>
+    </div>
+    
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="color: #f39c12; margin-bottom: 1rem;">🎯 Artistic Excellence</h3>
+        <p>We combine technical mastery with creative vision to produce stunning visual narratives that transcend ordinary photography and tell your unique story.</p>
+    </div>
+    
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="color: #3498db; margin-bottom: 1rem;">✨ Timeless Memories</h3>
+        <p>Using premium equipment and meticulous post-processing, we create images that stand the test of time and become treasured memories for generations.</p>
+    </div>
+</div>
+
+<div style="background: #ecf0f1; padding: 3rem 2rem; border-radius: 8px; text-align: center; margin: 3rem 0;">
+    <h3 style="color: #2c3e50; margin-bottom: 1rem;">Soul Lens Masterpieces</h3>
+    <p style="margin-bottom: 2rem;">Explore our most captivating and award-winning photographs</p>
+    <a href="{% url 'gallery:gallery' %}?featured=true" class="btn btn-primary">View Featured Photos</a>
+</div>
+{% endblock %}

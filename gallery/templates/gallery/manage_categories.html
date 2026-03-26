@@ -1,0 +1,46 @@
+{% extends 'gallery/base.html' %}
+
+{% block title %}Manage Categories - Admin{% endblock %}
+
+{% block content %}
+<div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: #2c3e50; margin: 0;">Manage Categories</h2>
+        <a href="{% url 'gallery:create_category_form' %}" style="background-color: #f39c12; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600;">+ Create Category</a>
+    </div>
+    
+    {% if categories %}
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background-color: #ecf0f1;">
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Name</th>
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Slug</th>
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Photos</th>
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Created</th>
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr style="border-bottom: 1px solid #ecf0f1;">
+                            <td style="padding: 1rem; font-weight: 500;">{{ category.name }}</td>
+                            <td style="padding: 1rem; font-family: monospace; color: #666;">{{ category.slug }}</td>
+                            <td style="padding: 1rem;">
+                                <span style="background-color: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.9rem;">{{ category.photo_count }} photo{% if category.photo_count != 1 %}s{% endif %}</span>
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.9rem; color: #666;">{{ category.created_at|date:"M d, Y" }}</td>
+                            <td style="padding: 1rem;">
+                                <a href="{% url 'gallery:edit_category' category.id %}" style="color: #3498db; text-decoration: none; margin-right: 1rem; font-weight: 600;">Edit</a>
+                                <a href="{% url 'gallery:delete_category' category.id %}" style="color: #e74c3c; text-decoration: none; font-weight: 600;" onclick="return confirm('Are you sure? This will not delete photos in this category.')">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="text-align: center; color: #999; padding: 2rem;">No categories found. <a href="{% url 'gallery:create_category_form' %}" style="color: #3498db;">Create one now</a></p>
+    {% endif %}
+</div>
+{% endblock %}

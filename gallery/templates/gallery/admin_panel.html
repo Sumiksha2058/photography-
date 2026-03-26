@@ -1,0 +1,165 @@
+{% extends 'gallery/base.html' %}
+
+{% block title %}Admin Panel - Photography Portfolio{% endblock %}
+
+{% block content %}
+<h2 style="color: #2c3e50; margin-bottom: 2rem;">Admin Panel</h2>
+
+{% if not user.is_staff %}
+    <div class="alert alert-error">
+        ⚠️ You do not have permission to access this page. Please contact the administrator.
+    </div>
+{% else %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3 style="color: #3498db;">📊 Statistics</h3>
+            <p style="font-size: 2rem; color: #2c3e50; margin: 1rem 0;">{{ total_photos }}</p>
+            <p>Total Photos</p>
+        </div>
+        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3 style="color: #3498db;">📁 Categories</h3>
+            <p style="font-size: 2rem; color: #2c3e50; margin: 1rem 0;">{{ total_categories }}</p>
+            <p>Total Categories</p>
+        </div>
+        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3 style="color: #3498db;">👁️ Views</h3>
+            <p style="font-size: 2rem; color: #2c3e50; margin: 1rem 0;">{{ total_views }}</p>
+            <p>Total Views</p>
+        </div>
+    </div>
+    
+    <!-- Upload Photo Form -->
+    <div class="admin-panel">
+        <h3>Upload New Photo</h3>
+        <form method="post" action="{% url 'gallery:upload_photo' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Photo Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="">Select a category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Image File</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="is_featured"> Mark as Featured
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Upload Photo</button>
+        </form>
+    </div>
+    
+    <!-- Create Category Form -->
+    <div class="admin-panel">
+        <h3>Create New Category</h3>
+        <form method="post" action="{% url 'gallery:create_category' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="cat_name">Category Name</label>
+                <input type="text" id="cat_name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cat_slug">Slug</label>
+                <input type="text" id="cat_slug" name="slug" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cat_description">Description</label>
+                <textarea id="cat_description" name="description"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Create Category</button>
+        </form>
+    </div>
+    
+    <!-- Photos Management -->
+    <div class="admin-panel">
+        <h3>Manage Photos</h3>
+        {% if photos %}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #ecf0f1;">
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Title</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Category</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Views</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Featured</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for photo in photos %}
+                            <tr style="border-bottom: 1px solid #ecf0f1;">
+                                <td style="padding: 1rem;">{{ photo.title }}</td>
+                                <td style="padding: 1rem;">{{ photo.category.name|default:"Uncategorized" }}</td>
+                                <td style="padding: 1rem;">{{ photo.views }}</td>
+                                <td style="padding: 1rem;">{% if photo.is_featured %}✅{% else %}❌{% endif %}</td>
+                                <td style="padding: 1rem;">
+                                    <a href="{% url 'gallery:edit_photo' photo.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="{% url 'gallery:delete_photo' photo.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No photos yet.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Categories Management -->
+    <div class="admin-panel">
+        <h3>Manage Categories</h3>
+        {% if categories %}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #ecf0f1;">
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Name</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Slug</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Photos</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #bdc3c7;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                            <tr style="border-bottom: 1px solid #ecf0f1;">
+                                <td style="padding: 1rem;">{{ category.name }}</td>
+                                <td style="padding: 1rem;">{{ category.slug }}</td>
+                                <td style="padding: 1rem;">{{ category.photo_count }}</td>
+                                <td style="padding: 1rem;">
+                                    <a href="{% url 'gallery:edit_category' category.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="{% url 'gallery:delete_category' category.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No categories yet.</p>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
