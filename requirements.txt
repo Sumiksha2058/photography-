@@ -1,6 +1,48 @@
+# Django Framework
 Django==5.2.12
-mysqlclient==2.2.8
+djangorestframework==3.14.0
 django-cors-headers==4.9.0
-python-decouple==3.8
+django-filter==24.1
+django-extensions==3.2.3
+
+# Database
+mysqlclient==2.2.8
+PyMySQL==1.1.0
+
+# Image Processing
 Pillow==10.1.0
+python-magic==0.4.27
+
+# Configuration & Environment
+python-decouple==3.8
+python-dotenv==1.0.0
+
+# Security
+cryptography==41.0.7
+PyJWT==2.8.1
+
+# Production Server
 gunicorn==21.2.0
+whitenoise==6.6.0
+
+# API & Serialization
+requests==2.31.0
+pytz==2024.1
+
+# Utilities
+six==1.16.0
+sqlparse==0.4.4
+
+# Development & Testing
+pytest==7.4.3
+pytest-django==4.7.0
+black==23.12.1
+flake8==6.1.0
+isort==5.13.2
+
+# Monitoring & Logging
+python-json-logger==2.0.7
+
+# Optional: For async support
+celery==5.3.4
+redis==5.0.1
