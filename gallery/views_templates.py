@@ -7,12 +7,12 @@ from .models import Photo, Category
 
 
 def home(request):
-    """Home page view"""
+    """Home page view - Modern design"""
     featured_photos = Photo.objects.filter(is_featured=True)[:6]
     context = {
         'featured_photos': featured_photos,
     }
-    return render(request, 'gallery/home.html', context)
+    return render(request, 'gallery/home_modern.html', context)
 
 
 def gallery(request):

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Soul Lens Photography</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #ecf0f1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+            color: var(--text-color);
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .admin-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .admin-header .user-info p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .admin-header .logout-btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .admin-header .logout-btn:hover {
+            background-color: #c0392b;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card h3 {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        
+        .quick-actions {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .quick-actions h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            padding: 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: block;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: white;
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #2980b9 100%);
+        }
+        
+        .action-btn.warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .action-btn.dark {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
+        }
+        
+        .action-btn.success {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+        
+        .recent-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .recent-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .table {
+            margin: 0;
+        }
+        
+        .table thead {
+            background-color: #f8f9fa;
+        }
+        
+        .table th {
+            border-bottom: 2px solid #dee2e6;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 1rem;
+        }
+        
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .alert {
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="container">
+            <h1>🔐 Admin Dashboard</h1>
+            <div class="user-info">
+                <p>Welcome, <strong>{{ admin.full_name|default:admin.username }}</strong></p>
+                <a href="{% url 'gallery:admin_portal_logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>📊 Total Photos</h3>
+                <div class="number">{{ total_photos }}</div>
+                <p>Photos in gallery</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>📁 Categories</h3>
+                <div class="number">{{ total_categories }}</div>
+                <p>Photo categories</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>👁️ Total Views</h3>
+                <div class="number">{{ total_views }}</div>
+                <p>Gallery views</p>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>⚡ Quick Actions</h2>
+            <div class="action-buttons">
+                <a href="{% url 'gallery:admin_portal_upload_photo' %}" class="action-btn primary">
+                    ➕ Upload Photo
+                </a>
+                <a href="{% url 'gallery:admin_portal_create_category' %}" class="action-btn warning">
+                    ➕ Create Category
+                </a>
+                <a href="{% url 'gallery:admin_portal_manage_photos' %}" class="action-btn dark">
+                    📋 Manage Photos
+                </a>
+                <a href="{% url 'gallery:admin_portal_manage_categories' %}" class="action-btn success">
+                    📋 Manage Categories
+                </a>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        {% if recent_photos %}
+        <div class="recent-section">
+            <h2>📸 Recent Photos</h2>
+            <div style="overflow-x: auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Views</th>
+                            <th>Featured</th>
+                            <th>Uploaded</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for photo in recent_photos %}
+                        <tr>
+                            <td><strong>{{ photo.title }}</strong></td>
+                            <td>{{ photo.category.name|default:"Uncategorized" }}</td>
+                            <td>{{ photo.views }}</td>
+                            <td>{% if photo.is_featured %}<span style="color: #27ae60; font-weight: 600;">✓ Featured</span>{% else %}<span style="color: #95a5a6;">Regular</span>{% endif %}</td>
+                            <td>{{ photo.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
